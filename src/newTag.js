@@ -3,24 +3,23 @@ class NewTag extends React.Component {
   state = {
     tag: ''
   };
+  //handle input of input field and value to state property tag
   handleInput = e => {
     e.preventDefault();
-    this.setState({ tag: e.target.value }, () => {
-      console.log(this.state.tag);
-    });
+    this.setState({ tag: e.target.value }, () => {});
   };
+  //on click pass index of student and value of tag property in state
   addInformation = (i, x) => {
     this.props.newTagPush(i, x);
-    //const newTagMade = (this.props.newTagInfo.newTag = [x]);
     console.log(i, x);
   };
-
   render() {
-    console.log(this.props);
     return (
       <div>
         <button
-          onClick={this.addInformation(this.props.studentIndex, this.state.tag)}
+          onClick={() =>
+            this.addInformation(this.props.studentIndex, this.state.tag)
+          }
         >
           Add new Tag
         </button>

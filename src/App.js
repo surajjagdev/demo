@@ -7,6 +7,7 @@ class App extends Component {
   state = {
     students: []
   };
+  //fetch data and format to json then set to state
   fetchStudents = async () => {
     const res = await fetch('https://www.hatchways.io/api/assessment/students');
     const formatted = await res.json();
@@ -18,6 +19,7 @@ class App extends Component {
   async componentWillMount() {
     this.fetchStudents();
   }
+  //take length of grades array and get average by dividing sum over length
   average = array => {
     let lengthArray = array.length;
     let sum = 0;
@@ -26,32 +28,22 @@ class App extends Component {
     }
     return sum / lengthArray + '%';
   };
+  //make a new array with students in state, then change one student to add in new property in the student object
   newTagPush = (i, x) => {
-    /*const newTag = this.state.students.map(student => {
-      if (student.id === i) {
-        return student;
-      }
-      return {
-        ...student,
-        newTag: [x]
-      };
-    });
-    this.setState({ students: newTag });*/
-    //makes infinite loop
     console.log(i, x);
-    /*this.setState({
-      students: this.state.students.map((student, index) => {
-        if (index === i) {
-          return {
-            ...student,
-            newTag: [x]
-          };
-        }
-        return student;
-      })
-    });*/
+    let allStudents = [...this.state.students];
+    let student = allStudents[i];
+    if (student.newTag === undefined) {
+      student.newTag = [];
+    }
+    student.newTag.push(x);
+    if (student.newTag.length > 0) {
+      this.setState({ students: allStudents }, () => {
+        console.log(this.state.students);
+      });
+    }
   };
-
+  //pass in props students, avg fn and new tag fn to List
   render() {
     return (
       <Display>

@@ -5,14 +5,20 @@ import ExpandedGrades from './expandedGrades';
 class List extends React.Component {
   state = {
     search: '',
+    tagSearch: '',
     expanded: false,
     grades: [],
-    index: '',
-    newTagExists: false
+    index: ''
   };
   handleInput = e => {
     e.preventDefault();
-    this.setState({ search: e.target.value }, () => {
+    this.setState({ search: e.target.value, tagSearch: '' }, () => {
+      console.log(this.state.search);
+    });
+  };
+  handleTagInput = e => {
+    e.preventDefault();
+    this.setState({ tagSearch: e.target.value, search: '' }, () => {
       console.log(this.state.search);
     });
   };
@@ -24,9 +30,16 @@ class List extends React.Component {
       index: y
     });
   };
+  searchTags = x => {
+    if (typeof x.newTag !== 'undefined') {
+      return x.newTag.indexOf(this.state.tagSearch) !== -1;
+    }
+    return false;
+  };
   render() {
     /*filter the students state by individual student returning where student firstName or 
 or lastName where indexOf of search String is equal to student info and return if found*/
+
     let filteredStudents = this.props.students.filter(student => {
       return (
         student.firstName
@@ -34,19 +47,30 @@ or lastName where indexOf of search String is equal to student info and return i
           .indexOf(this.state.search.toLowerCase()) !== -1 ||
         student.lastName
           .toLowerCase()
-          .indexOf(this.state.search.toLowerCase()) !== -1
+          .indexOf(this.state.search.toLowerCase()) !== -1 ||
+        this.searchTags(student)
       );
     });
+
     return (
       <div>
         <div>
           <input
             name="search"
             id="search"
-            placeholder="Search"
+            placeholder="Search Names"
             type="text"
             onKeyUp={e => {
               this.handleInput(e);
+            }}
+          />
+          <input
+            name="search"
+            id="search"
+            placeholder="Search Tags"
+            type="text"
+            onKeyUp={e => {
+              this.handleTagInput(e);
             }}
           />
         </div>
@@ -98,8 +122,6 @@ or lastName where indexOf of search String is equal to student info and return i
                     index={this.state.index}
                     studentNumber={student.id - 1}
                     newTag={student.newTag}
-                    newTagExists={this.handleNewTag}
-                    stateNewTag={this.state.newTagExists}
                     students={this.props.students}
                     newTagPush={this.props.newTagPush}
                   />
